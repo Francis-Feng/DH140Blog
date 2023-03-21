@@ -121,9 +121,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     "search-submit-button-title": "Submit"
   }
 }</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
-<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 <link rel="stylesheet" href="../styles.css">
@@ -175,389 +172,180 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">---</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>title: <span class="st">"First File"</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>description: <span class="st">"Testing Quarto"</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>author: <span class="st">"Haocheng Feng"</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>date: <span class="st">"03/12/2023"</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>date<span class="op">-</span>modified: <span class="st">"03/12/2023"</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="op">---</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<section id="introduction" class="level1">
-<h1>Introduction</h1>
-<p>Dataset Link:https://corgis-edu.github.io/corgis/csv/astronauts/</p>
+<section id="the-final-frontier-a-data-driven-journey-through-space-exploration" class="level1">
+<h1>The Final Frontier: A Data-Driven Journey Through Space Exploration</h1>
+<section id="by-francis-feng" class="level3">
+<h3 class="anchored" data-anchor-id="by-francis-feng">By: Francis Feng</h3>
+</section>
+<section id="march-2023" class="level3">
+<h3 class="anchored" data-anchor-id="march-2023">20 March 2023</h3>
+</section>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>Dataset Link: https://corgis-edu.github.io/corgis/csv/astronauts/</p>
 <p>The dataset above is created with publicly available data from NASA and includes all of the space missions before 15 January 2020. The dataset focuses on both the astronauts themselves such as full astronaut name, sex, date of birth, nationality, military status, a title and year of a selection program. In addition to information regarding the astronauts, the dataset also includes details of the mission with metrics such as duration of the mission and extravehicular activity.</p>
 <p>As someone with a passion for space exploration, this dataset from CORGIS immediately captured my attention as I found it extremely intriguing. The dataset itself also provides a considerable amount of information that will prove to be valuable in my analysis.</p>
-<p>I hope to dive deeper into the following analysis questions: - How has space exploration advanced in the past decades? - How has the demographic of astronauts changed over time? - What does this dataset reveal about the space race and how has each country played a role in it?</p>
+<p>I hope to dive deeper into the following analysis questions: - How has space exploration advanced in the past decades? - How has the demographic of astronauts changed over time? - What does this dataset reveal about the space race?</p>
 </section>
-<section id="dataset-exploration" class="level1">
-<h1>Dataset Exploration</h1>
-<div class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> bs4 <span class="im">import</span> BeautifulSoup</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> pdcorgis(name):</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  name <span class="op">=</span> name.lower()</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  url <span class="op">=</span> <span class="st">"https://corgis-edu.github.io/corgis/csv/"</span> <span class="op">+</span> name <span class="op">+</span> <span class="st">"/"</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  response <span class="op">=</span> requests.get(url)</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  soup <span class="op">=</span> BeautifulSoup(response.text, <span class="st">'html.parser'</span>)</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  a_tags <span class="op">=</span> soup.find_all(<span class="st">'a'</span>)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  a_href <span class="op">=</span> <span class="st">''</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> a_tag <span class="kw">in</span> a_tags:</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> a_tag.has_attr(<span class="st">'download'</span>):</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>      a_href <span class="op">=</span> a_tag[<span class="st">'href'</span>]</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  dl_url <span class="op">=</span> <span class="st">"https://corgis-edu.github.io/corgis/csv/"</span> <span class="op">+</span> name <span class="op">+</span> <span class="st">"/"</span> <span class="op">+</span> a_href</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  df <span class="op">=</span> pd.read_csv(dl_url)</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> df</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pdcorgis(<span class="st">"Astronauts"</span>)</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>df.describe()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="9">
-
-<div>
-
-<table class="dataframe table table-sm table-striped">
-  <thead>
-    <tr>
-      <th></th>
-      <th>Profile.Astronaut Numbers.Overall</th>
-      <th>Profile.Astronaut Numbers.Nationwide</th>
-      <th>Profile.Birth Year</th>
-      <th>Profile.Selection.Year</th>
-      <th>Profile.Lifetime Statistics.Mission count</th>
-      <th>Mission.Year</th>
-      <th>Mission.Durations.Mission duration</th>
-      <th>Profile.Lifetime Statistics.Mission duration</th>
-      <th>Mission.Durations.EVA duration</th>
-      <th>Profile.Lifetime Statistics.EVA duration</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>count</th>
-      <td>1270.000000</td>
-      <td>1270.000000</td>
-      <td>1270.000000</td>
-      <td>1270.000000</td>
-      <td>1270.000000</td>
-      <td>1270.000000</td>
-      <td>1270.000000</td>
-      <td>1270.000000</td>
-      <td>1270.000000</td>
-      <td>1270.000000</td>
-    </tr>
-    <tr>
-      <th>mean</th>
-      <td>273.451181</td>
-      <td>128.320472</td>
-      <td>1951.659055</td>
-      <td>1985.496850</td>
-      <td>2.991339</td>
-      <td>1994.540945</td>
-      <td>1052.018987</td>
-      <td>2976.400531</td>
-      <td>3.666326</td>
-      <td>10.799559</td>
-    </tr>
-    <tr>
-      <th>std</th>
-      <td>147.879465</td>
-      <td>96.880495</td>
-      <td>11.433481</td>
-      <td>12.166869</td>
-      <td>1.399343</td>
-      <td>12.568093</td>
-      <td>1716.243661</td>
-      <td>4219.885619</td>
-      <td>7.289887</td>
-      <td>16.066000</td>
-    </tr>
-    <tr>
-      <th>min</th>
-      <td>1.000000</td>
-      <td>1.000000</td>
-      <td>1921.000000</td>
-      <td>1959.000000</td>
-      <td>1.000000</td>
-      <td>1961.000000</td>
-      <td>0.000000</td>
-      <td>0.610000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-    </tr>
-    <tr>
-      <th>25%</th>
-      <td>152.250000</td>
-      <td>47.250000</td>
-      <td>1944.000000</td>
-      <td>1978.000000</td>
-      <td>2.000000</td>
-      <td>1986.000000</td>
-      <td>190.007500</td>
-      <td>487.750000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-    </tr>
-    <tr>
-      <th>50%</th>
-      <td>277.000000</td>
-      <td>110.000000</td>
-      <td>1952.000000</td>
-      <td>1987.000000</td>
-      <td>3.000000</td>
-      <td>1995.000000</td>
-      <td>261.000000</td>
-      <td>938.000000</td>
-      <td>0.000000</td>
-      <td>0.000000</td>
-    </tr>
-    <tr>
-      <th>75%</th>
-      <td>387.000000</td>
-      <td>203.750000</td>
-      <td>1959.000000</td>
-      <td>1995.000000</td>
-      <td>4.000000</td>
-      <td>2003.000000</td>
-      <td>382.000000</td>
-      <td>4270.000000</td>
-      <td>4.765000</td>
-      <td>19.520000</td>
-    </tr>
-    <tr>
-      <th>max</th>
-      <td>565.000000</td>
-      <td>433.000000</td>
-      <td>1983.000000</td>
-      <td>2018.000000</td>
-      <td>7.000000</td>
-      <td>2019.000000</td>
-      <td>10505.000000</td>
-      <td>21083.520000</td>
-      <td>89.130000</td>
-      <td>78.800000</td>
-    </tr>
-  </tbody>
-</table>
+<section id="methods" class="level2">
+<h2 class="anchored" data-anchor-id="methods">Methods</h2>
+<p>The first step to dataset analysis is getting the dataset. I have decided to write a function called <em>pdcorgis</em> that will take in a name of a CORGIS dataset and return the data frame that corresponds to the desired dataset. To create this function, we will be importing the requests library which will help us get responses when passed in an URL. Next, we will important the BeautifulSoup library so that we can easily parse through the HTML tags on the website that the CORGIS dataset is hosted.</p>
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> bs4 <span class="im">import</span> BeautifulSoup</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> pdcorgis(name):</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  name <span class="op">=</span> name.lower()</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  url <span class="op">=</span> <span class="st">"https://corgis-edu.github.io/corgis/csv/"</span> <span class="op">+</span> name <span class="op">+</span> <span class="st">"/"</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  response <span class="op">=</span> requests.get(url)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  soup <span class="op">=</span> BeautifulSoup(response.text, <span class="st">'html.parser'</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  a_tags <span class="op">=</span> soup.find_all(<span class="st">'a'</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  a_href <span class="op">=</span> <span class="st">''</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> a_tag <span class="kw">in</span> a_tags:</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> a_tag.has_attr(<span class="st">'download'</span>):</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>      a_href <span class="op">=</span> a_tag[<span class="st">'href'</span>]</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  dl_url <span class="op">=</span> <span class="st">"https://corgis-edu.github.io/corgis/csv/"</span> <span class="op">+</span> name <span class="op">+</span> <span class="st">"/"</span> <span class="op">+</span> a_href</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  df <span class="op">=</span> pd.read_csv(dl_url)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="results" class="level2">
+<h2 class="anchored" data-anchor-id="results">Results</h2>
+<p>The line graph below shows a general trend of the number of astronauts worldwide over time. First of all, we have to create a new data frame that only consists of the mission year and the count of astronauts worldwide. Next, we need to group the data frame by the mission year so that there is only one data point per year. Since there are often multiple missions every year, we can take the median value of the count of astronauts worldwide for each year. Since the units for human beings are in whole numbers and the median can sometimes return to be decimals, we are going to apply a floor function to all of our data points. Lastly, we can plot the cleaned up data frame.</p>
+<p>Through inspection, we can see that there is a general up trend for the number of astronauts worldwide which corresponds to the real world intuitions since new astronauts are being trained every day. Hence, the number of astronauts going into space each year would naturally increase with occasionally dips when older astronauts retire.</p>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df_years <span class="op">=</span> df[[<span class="st">'Mission.Year'</span>, <span class="st">'Profile.Astronaut Numbers.Overall'</span>]]</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df_years <span class="op">=</span> df_years.groupby(<span class="st">'Mission.Year'</span>).agg({<span class="st">'Profile.Astronaut Numbers.Overall'</span>: <span class="st">'median'</span>})</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>df_years[<span class="st">'Profile.Astronaut Numbers.Overall'</span>] <span class="op">=</span> df_years[<span class="st">'Profile.Astronaut Numbers.Overall'</span>].<span class="bu">apply</span>(np.floor)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>lines <span class="op">=</span> df_years.plot.line(title<span class="op">=</span><span class="st">'Number of Astronauts Worldwide Over Time (Fig. 1)'</span>, xlabel<span class="op">=</span><span class="st">'Year'</span>, ylabel<span class="op">=</span><span class="st">'Numer of Astronauts'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="final-project_files/figure-html/cell-3-output-1.png" class="img-fluid"></p>
 </div>
 </div>
-</div>
-<div class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="10">
-
-<div>
-
-<table class="dataframe table table-sm table-striped">
-  <thead>
-    <tr>
-      <th></th>
-      <th>Profile.Astronaut Numbers.Overall</th>
-      <th>Profile.Astronaut Numbers.Nationwide</th>
-      <th>Profile.Name</th>
-      <th>Profile.Gender</th>
-      <th>Profile.Birth Year</th>
-      <th>Profile.Nationality</th>
-      <th>Profile.Military</th>
-      <th>Profile.Selection.Group</th>
-      <th>Profile.Selection.Year</th>
-      <th>Profile.Lifetime Statistics.Mission count</th>
-      <th>Mission.Role</th>
-      <th>Mission.Year</th>
-      <th>Mission.Name</th>
-      <th>Mission.Vechicles.Ascent</th>
-      <th>Mission.Vechicles.Orbit</th>
-      <th>Mission.Vechicles.Decent</th>
-      <th>Mission.Durations.Mission duration</th>
-      <th>Profile.Lifetime Statistics.Mission duration</th>
-      <th>Mission.Durations.EVA duration</th>
-      <th>Profile.Lifetime Statistics.EVA duration</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>1</td>
-      <td>1</td>
-      <td>Gagarin, Yuri</td>
-      <td>male</td>
-      <td>1934</td>
-      <td>U.S.S.R/Russia</td>
-      <td>True</td>
-      <td>TsPK-1</td>
-      <td>1960</td>
-      <td>1</td>
-      <td>pilot</td>
-      <td>1961</td>
-      <td>Vostok 1</td>
-      <td>Vostok 1</td>
-      <td>Vostok 2</td>
-      <td>Vostok 3</td>
-      <td>1.77</td>
-      <td>1.77</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>2</td>
-      <td>2</td>
-      <td>Titov, Gherman</td>
-      <td>male</td>
-      <td>1935</td>
-      <td>U.S.S.R/Russia</td>
-      <td>True</td>
-      <td>TsPK-1</td>
-      <td>1960</td>
-      <td>1</td>
-      <td>pilot</td>
-      <td>1961</td>
-      <td>Vostok 2</td>
-      <td>Vostok 2</td>
-      <td>Vostok 2</td>
-      <td>Vostok 2</td>
-      <td>25.00</td>
-      <td>25.30</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>3</td>
-      <td>1</td>
-      <td>Glenn, John H., Jr.</td>
-      <td>male</td>
-      <td>1921</td>
-      <td>U.S.</td>
-      <td>True</td>
-      <td>NASA Astronaut Group 1</td>
-      <td>1959</td>
-      <td>2</td>
-      <td>pilot</td>
-      <td>1962</td>
-      <td>MA-6</td>
-      <td>MA-6</td>
-      <td>MA-6</td>
-      <td>MA-6</td>
-      <td>5.00</td>
-      <td>218.00</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>3</td>
-      <td>1</td>
-      <td>Glenn, John H., Jr.</td>
-      <td>male</td>
-      <td>1921</td>
-      <td>U.S.</td>
-      <td>True</td>
-      <td>NASA Astronaut Group 2</td>
-      <td>1959</td>
-      <td>2</td>
-      <td>PSP</td>
-      <td>1998</td>
-      <td>STS-95</td>
-      <td>STS-95</td>
-      <td>STS-95</td>
-      <td>STS-95</td>
-      <td>213.00</td>
-      <td>218.00</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>4</td>
-      <td>2</td>
-      <td>Carpenter, M. Scott</td>
-      <td>male</td>
-      <td>1925</td>
-      <td>U.S.</td>
-      <td>True</td>
-      <td>NASA- 1</td>
-      <td>1959</td>
-      <td>1</td>
-      <td>Pilot</td>
-      <td>1962</td>
-      <td>Mercury-Atlas 7</td>
-      <td>Mercury-Atlas 7</td>
-      <td>Mercury-Atlas 7</td>
-      <td>Mercury-Atlas 7</td>
-      <td>5.00</td>
-      <td>5.00</td>
-      <td>0.0</td>
-      <td>0.0</td>
-    </tr>
-  </tbody>
-</table>
+<p>The following bar graph displays the total number of male versus female astronauts who has accomplished space missions. The number of male astronauts is more than 5 times that of the number of female astronauts who has gone into space. This visualization supports the historical accurate narrative that space exploration is a male dominated field and the bias towards female astronauts is prevalent especially in the earlier stages of space travel.</p>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> df[<span class="st">'Profile.Gender'</span>].value_counts()</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>counts.plot(kind<span class="op">=</span><span class="st">'bar'</span>, ax<span class="op">=</span>ax, color<span class="op">=</span>[<span class="st">'skyblue'</span>, <span class="st">'tomato'</span>])</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Gender'</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Number of Astronauts'</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'Number of Astronauts by Gender (Fig. 2)'</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="final-project_files/figure-html/cell-4-output-1.png" class="img-fluid"></p>
 </div>
 </div>
-</div>
-<div class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'Mission.Year'</span>] <span class="op">=</span> pd.to_datetime(df[<span class="st">'Mission.Year'</span>])</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>df.plot(x<span class="op">=</span><span class="st">'Mission.Year'</span>, y<span class="op">=</span><span class="st">'Profile.Astronaut Numbers.Overall'</span>, ax<span class="op">=</span>ax, label<span class="op">=</span><span class="st">'Astronaut Count'</span>)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># set the labels and title</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Year'</span>)</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Number of Astronauts'</span>)</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'Number of Astronauts Worldwide'</span>)</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co"># add a legend</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co"># show the plot</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Below is a bar graph listing all of the countries that have successfully operated missions into space and the number of missions that they have accomplished. Sitting at over 800, the United States has the most number of completed missions by far. This is followed by the U.S.S.R./Russia with a little under 300. The rest of the countries pale in comparison in terms of the number of space missions completed. The United States and U.S.S.R.’s dominance over space exploration could be explained by the space race in the 20th century during the height of the cold war. The geopolitical conflict fueled much of the space missions that we see here in this graph.</p>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> df[<span class="st">'Profile.Nationality'</span>].value_counts()</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>counts.plot(kind<span class="op">=</span><span class="st">'bar'</span>, ax<span class="op">=</span>ax)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Nationality'</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Number of Astronauts'</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'Number of Astronauts by Nationality (Fig. 3)'</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <p><img src="final-project_files/figure-html/cell-5-output-1.png" class="img-fluid"></p>
 </div>
 </div>
-<div class="cell" data-execution_count="27">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> df[<span class="st">'Profile.Gender'</span>].value_counts()</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>counts.plot(kind<span class="op">=</span><span class="st">'bar'</span>, ax<span class="op">=</span>ax)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Gender'</span>)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Number of Astronauts'</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'Number of Astronauts by Gender'</span>)</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This line graph depicts the number of astronauts that were sent into space each year. During the years between 1990 and 2000, there were consistently a large amount of space missions. In the recent decade, the number of space missions has drastically decreased.</p>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> df[<span class="st">'Mission.Year'</span>].value_counts()</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>counts.sort_index(axis<span class="op">=</span><span class="dv">0</span>, inplace<span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>lines <span class="op">=</span> counts.plot.line(title<span class="op">=</span><span class="st">'Number Missions by Years (Fig. 4)'</span>, xlabel<span class="op">=</span><span class="st">'Year'</span>, ylabel<span class="op">=</span><span class="st">'Numer of Astronauts'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <p><img src="final-project_files/figure-html/cell-6-output-1.png" class="img-fluid"></p>
 </div>
 </div>
-<div class="cell" data-execution_count="32">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> df[<span class="st">'Profile.Nationality'</span>].value_counts()</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>counts.plot(kind<span class="op">=</span><span class="st">'bar'</span>, ax<span class="op">=</span>ax)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Nationality'</span>)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Number of Astronauts'</span>)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'Number of Astronauts by Nationality'</span>)</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Shown below is a line graph of the maximum mission duration by years to see if space missions have gotten longer over time. Indeed, the duration of space missions has shown an increase over the years, going from the first ever space mission that last 1 hour by Yuri Gagarin to more recent space missions that last over 10,000 hours. This drastic difference between mankind’s first venture into space to more frequent space missions can be attributed to the development of space travel. As technology advance and we push the boundaries of human knowledge, we discover new ways to fly higher, faster, and farther.</p>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df_years2 <span class="op">=</span> df[[<span class="st">'Mission.Year'</span>, <span class="st">'Mission.Durations.Mission duration'</span>]]</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df_years2 <span class="op">=</span> df_years2.groupby(<span class="st">'Mission.Year'</span>).agg({<span class="st">'Mission.Durations.Mission duration'</span>: <span class="st">'max'</span>}).reset_index()</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>plt.scatter(df_years2[<span class="st">'Mission.Year'</span>], df_years2[<span class="st">'Mission.Durations.Mission duration'</span>])</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>coeffs <span class="op">=</span> np.polyfit(df_years2[<span class="st">'Mission.Year'</span>], df_years2[<span class="st">'Mission.Durations.Mission duration'</span>], <span class="dv">4</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>poly_func <span class="op">=</span> np.poly1d(coeffs)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>x_range <span class="op">=</span> np.linspace(df_years2[<span class="st">'Mission.Year'</span>].<span class="bu">min</span>(), df_years2[<span class="st">'Mission.Year'</span>].<span class="bu">max</span>(), <span class="dv">100</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>plt.plot(x_range, poly_func(x_range), color<span class="op">=</span><span class="st">'r'</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Duration of Missions Over Time (Fig. 5)'</span>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Years'</span>)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Hours'</span>)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <p><img src="final-project_files/figure-html/cell-7-output-1.png" class="img-fluid"></p>
 </div>
 </div>
-<div class="cell" data-execution_count="35">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>counts <span class="op">=</span> df[<span class="st">'Mission.Year'</span>].value_counts()</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>counts.plot(kind<span class="op">=</span><span class="st">'bar'</span>, ax<span class="op">=</span>ax)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Year'</span>)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Number of Astronauts on Missions'</span>)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'Number of Astronauts on Missions by Years'</span>)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In addition to exploring general mission duration, I decided to dive in further into extravehicular activity (EVA) duration by years to see if EVA has gotten longer over time. The visualization shows that EVA durations has gone from impossible, at the time of the first space mission, to a peak of over 80 hours in more recent decades. EVA is any activity done by an astronaut outside of the spacecraft. The most famous example being the first moon landing by Neil Armstrong. EVA is extremely important for conducting complex work outside the pressurized space that a vehicle provides. The harsh environment of space proves to be greatly hostile to the human body. Although it is difficult to plan and perform EVA, it is invaluable to scientific research since some data can only be gathered through EVA. The upwards trend of EVA duration supports the advancement of space exploration as EVA is extraordinarily dangerous and requires cutting-edge technology to carry out reliably and safely.</p>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df_years3 <span class="op">=</span> df[[<span class="st">'Mission.Year'</span>, <span class="st">'Mission.Durations.EVA duration'</span>]]</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>df_years3 <span class="op">=</span> df_years3.groupby(<span class="st">'Mission.Year'</span>).agg({<span class="st">'Mission.Durations.EVA duration'</span>: <span class="st">'max'</span>}).reset_index()</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>plt.scatter(df_years3[<span class="st">'Mission.Year'</span>], df_years3[<span class="st">'Mission.Durations.EVA duration'</span>])</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>coeffs <span class="op">=</span> np.polyfit(df_years3[<span class="st">'Mission.Year'</span>], df_years3[<span class="st">'Mission.Durations.EVA duration'</span>], <span class="dv">1</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>poly_func <span class="op">=</span> np.poly1d(coeffs)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>x_range <span class="op">=</span> np.linspace(df_years3[<span class="st">'Mission.Year'</span>].<span class="bu">min</span>(), df_years3[<span class="st">'Mission.Year'</span>].<span class="bu">max</span>(), <span class="dv">100</span>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>plt.plot(x_range, poly_func(x_range), color<span class="op">=</span><span class="st">'r'</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Duration of EVA Missions Over Time (Fig. 6)'</span>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Years'</span>)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Hours'</span>)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <p><img src="final-project_files/figure-html/cell-8-output-1.png" class="img-fluid"></p>
 </div>
 </div>
-<p>Some additional visualizations I would like create relating to my analysis questions incude: - A line graph of mission duration x years to see if space missions have gotten longer over the years - A line graph of EVA duration x years to see if EVA has gotten longer over the years - A double bar graph of astronauts over time by gender to see the gender ratio in astronauts - A line graph of number of astronauts by nationality over time to see how different countries have developed their space exploration programs over the years</p>
+<p>The following line graph contains two lines, one for the number of male astronauts and another for female astronauts. We can see that there are very few female astronauts until the mid-1980’s. The trends shown in this line graph supports the bar graph of the number of astronauts by gender as the number of male astronauts has consistently been much higher than the number of female astronauts every single year.</p>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df_male <span class="op">=</span> df[df[<span class="st">'Profile.Gender'</span>] <span class="op">==</span> <span class="st">'male'</span>]</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>df_male <span class="op">=</span> df_male.groupby(<span class="st">'Mission.Year'</span>).size()</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>df_female <span class="op">=</span> df[df[<span class="st">'Profile.Gender'</span>] <span class="op">==</span> <span class="st">'female'</span>]</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>df_female <span class="op">=</span> df_female.groupby(<span class="st">'Mission.Year'</span>).size()</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>lines <span class="op">=</span> df_male.plot.line(title<span class="op">=</span><span class="st">'Number of Astronauts By Gender (Fig. 7)'</span>, ylabel<span class="op">=</span><span class="st">'Number of Astronauts'</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>lines <span class="op">=</span> df_female.plot.line(xlabel<span class="op">=</span><span class="st">'Year'</span>, color<span class="op">=</span><span class="st">'red'</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>legend <span class="op">=</span> plt.legend([<span class="st">'Male'</span>,<span class="st">'Female'</span>], loc<span class="op">=</span><span class="st">'upper left'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="final-project_files/figure-html/cell-9-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>This line graph depicts the struggle between the US and the USSR in their fight for dominance in space exploration during the cold war era. The space race was a competition between the United States and the Soviet Union during the Cold War to explore space and demonstrate technological superiority. It began in 1957 with the Soviet Union’s launch of Sputnik, the first artificial satellite, and ended in 1975 with the joint Apollo-Soyuz Test Project. This can be demonstrated by the number of space missions between the 1960’s to the 1980’s which saw the two countries closely matching each other in the number of astronauts sent into space. The competition also spurred the development of new technologies and scientific breakthroughs, as well as significant political and cultural impacts.</p>
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df_ussr <span class="op">=</span> df[df[<span class="st">'Profile.Nationality'</span>] <span class="op">==</span> <span class="st">'U.S.S.R/Russia'</span>]</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>df_ussr <span class="op">=</span> df_ussr.groupby(<span class="st">'Mission.Year'</span>).size()</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>df_us <span class="op">=</span> df[df[<span class="st">'Profile.Nationality'</span>] <span class="op">==</span> <span class="st">'U.S.'</span>]</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>df_us <span class="op">=</span> df_us.groupby(<span class="st">'Mission.Year'</span>).size()</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>lines <span class="op">=</span> df_us.plot.line(title<span class="op">=</span><span class="st">'Number of Astronauts U.S. vs. U.S.S.R/Russia (Fig. 8)'</span>, ylabel<span class="op">=</span><span class="st">'Number of Astronauts'</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>lines <span class="op">=</span> df_ussr.plot.line(xlabel<span class="op">=</span><span class="st">'Year'</span>, color<span class="op">=</span><span class="st">'red'</span>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>legend <span class="op">=</span> plt.legend([<span class="st">'U.S.'</span>,<span class="st">'U.S.S.R/Russia'</span>], loc<span class="op">=</span><span class="st">'upper left'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="final-project_files/figure-html/cell-10-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="discussion" class="level2">
+<h2 class="anchored" data-anchor-id="discussion">Discussion</h2>
+<p>Through the dissection of the data visualizations, we can conclude that there is a continual advancement in space exploration over the past decades. Many of the graphs point to a steady up trend in terms of the number of space missions conducted (Fig. 1 and 4) and the extension of mission durations (Fig. 5 and 6). The number of missions performed shows that governments and private corporations around the world still have a continuous interest in space exploration and are willing to fund such operations. The longer missions, from merely one hour to over ten thousand hours clearly show the advancement of technology in space travel that allows human beings to be in space for longer.</p>
+<p>In Fig. 5, the 4th degree polynomial fit shows that there was a space boom from the 1960’s to the 1990’s where the mission duration dramatically increased each year. From 1990’s to the 2010’s, the mission duration peaked and slowed back down. After 2010’s to the present, the duration of space missions is again rapidly picking up speed with an extremely fast upward slope into the future. The exponential growth in mission duration supports the argument that space travel is improving since it requires great technological advancements in order to conduct space missions that are over ten thousand hours long. Furthermore, Fig. 6 shows the duration of EVA missions and the increase in duration of EVA missions represents an important step forward in our ability to explore and understand space, as well as in our ability to sustain human life in the hostile environment of space. The growth of EVA mission durations seems to be more linear when compared to the regular space mission duration which makes sense since EVA poses several difficulties that make it harder to conduct than normal missions. For example, the lack of gravity, harsh environment of space, and technical demands make EVA extremely hard. Astronauts must wear specialized spacesuits to protect themselves, but this also adds extra weight and bulk, making movement and dexterity difficult. Despite these challenges, EVA is critical for scientific research, spacecraft maintenance, and human exploration of space.</p>
+<p>The gender demographic of astronauts has changed significantly over time. According to Fig. 7, all the astronauts in the early years of space exploration were male. Since then, there has been a gradual increase in the number of women selected as astronauts. In recent years, there has been a conscious effort to increase diversity in the astronaut corps as seen in the slow increase in women astronauts each year. Although there are active efforts to create a more gender diverse demographic, there is still plenty more work to do as shown by the clear discrepancy of new male versus female astronauts.</p>
+<p>In addition to the advancements in space exploration and the evolution in gender diversity, this dataset also reveals trends in the space race between the U.S. and the U.S.S.R./Russia. The data exploration section shows that the USSR launched the first human, Yuri Gagarin, into space in 1961, beating the US to this milestone. However, upon examining Fig. 8, we can see that the US made significant strides in the 1960s and 1970s, including landing astronauts on the Moon as part of the Apollo program.</p>
+<p>The dataset also highlights the relative sizes and capabilities of the space agencies of the two nations. During the Cold War era, the Soviet Union had a larger and more well-established space program than the U.S., with a greater number and a longer record of manned spaceflights. However, America ultimately overtook the Soviet Union in the race to the Moon and continued to consistently conduct more space missions in the years after the Cold War.</p>
+<p>Overall, the Astronauts CORGIS dataset provides a valuable resource for exploring the history and achievements of human spaceflight, the gender gap in space exploration, and can shed light on the relative successes experienced by the US and the USSR during the space race.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
